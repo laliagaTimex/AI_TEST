@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 36" fill="none" aria-label="Timex Group">
+    <style>
+        .t-bold { font-family: 'Epilogue', 'DM Sans', 'Arial Black', Arial, sans-serif; font-weight: 900; font-size: 28px; fill: #ffffff; letter-spacing: 1px; }
+        .t-light { font-family: 'Epilogue', 'DM Sans', Arial, sans-serif; font-weight: 300; font-size: 28px; fill: #ffffff; letter-spacing: 2px; }
+    </style>
+    <text x="0" y="27" class="t-bold">TIMEX</text>
+    <text x="116" y="27" class="t-light">GROUP</text>
+</svg>
