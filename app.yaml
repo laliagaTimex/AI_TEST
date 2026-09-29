@@ -3,7 +3,7 @@ region: nyc
 static_sites:
   - name: frontend
     github:
-      repo: laliagaTimex/AI_Test
+      repo: laliagaTimex/AI_TEST
       branch: main
       deploy_on_push: true
     source_dir: /
