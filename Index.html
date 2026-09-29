@@ -1,8 +1,847 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<title>Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timex Group — Application Directory &amp; Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+        :root {
+            --black: #0a0a0a;
+            --charcoal: #1c1c1c;
+            --grey-dark: #2e2e2e;
+            --grey-mid: #555555;
+            --grey-light: #9e9e9e;
+            --grey-border: #d8d8d8;
+            --grey-bg: #f4f4f4;
+            --white: #ffffff;
+            --accent-assembly: #1a1a1a;
+            --accent-strapping: #5c5c5c;
+            --tag-assembly: #e8e8e8;
+            --tag-strapping: #f0f0f0;
+            --red: #c0392b;
+            --green: #2e7d32;
+            --shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: var(--black);
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #222;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: opacity 0.15s ease;
+        }
+
+        .header-logo-link:hover {
+            opacity: 0.85;
+        }
+
+        .timex-logo-img {
+            height: 24px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .header-divider {
+            width: 1px;
+            height: 22px;
+            background: #444;
+        }
+
+        .header-subtitle {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: #888;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-date {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        .user-pill {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: #1c1c1c;
+            padding: 4px 12px;
+            border-radius: 2px;
+            border: 1px solid #333;
+        }
+
+        .user-pill.visible {
+            display: flex;
+        }
+
+        .user-name {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: #aaa;
+            letter-spacing: 1px;
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid #444;
+            color: #ccc;
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            cursor: pointer;
+            border-radius: 2px;
+            text-transform: uppercase;
+            transition: all 0.15s ease;
+        }
+
+        .btn-logout:hover {
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--red);
+        }
+
+        /* ── AUTHENTICATION SCREEN ── */
+        #login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 56px);
+            background: var(--white);
+            padding: 40px 24px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            border: 1px solid var(--grey-border);
+            border-radius: 4px;
+            padding: 40px;
+            background: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .login-badge {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--grey-mid);
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .login-heading {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 38px;
+            letter-spacing: 1.5px;
+            color: var(--black);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .login-subheading {
+            font-size: 13px;
+            color: var(--grey-mid);
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--grey-dark);
+            font-weight: 500;
+        }
+
+        .form-input {
+            height: 42px;
+            border: 1px solid var(--grey-border);
+            background: var(--grey-bg);
+            color: var(--black);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            padding: 0 14px;
+            border-radius: 2px;
+            outline: none;
+            transition: all 0.15s ease;
+            width: 100%;
+        }
+
+        .form-input:focus {
+            border-color: var(--black);
+            background: var(--white);
+        }
+
+        .btn-login {
+            width: 100%;
+            height: 46px;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            border-radius: 2px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .btn-login:hover {
+            background: var(--grey-dark);
+        }
+
+        .login-error {
+            display: none;
+            background: #fdf2f2;
+            border: 1px solid #f5c6cb;
+            color: var(--red);
+            padding: 10px 14px;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            border-radius: 2px;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .login-error.visible {
+            display: block;
+        }
+
+        .demo-credentials-box {
+            margin-top: 24px;
+            padding: 14px;
+            background: var(--grey-bg);
+            border: 1px dashed var(--grey-border);
+            border-radius: 2px;
+        }
+
+        .demo-title {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--grey-mid);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .demo-row {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--black);
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+
+        .demo-fill-btn {
+            background: none;
+            border: none;
+            color: var(--grey-mid);
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            text-decoration: underline;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-fill-btn:hover {
+            color: var(--black);
+        }
+
+        /* ── DIRECTORY SCREEN ── */
+        #directory-screen {
+            display: none;
+            flex: 1;
+            background: var(--white);
+            padding: 40px 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .directory-header {
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--grey-border);
+            padding-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .directory-title-area {
+            max-width: 600px;
+        }
+
+        .directory-heading {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 42px;
+            letter-spacing: 2px;
+            color: var(--black);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .directory-subheading {
+            font-size: 13px;
+            color: var(--grey-mid);
+            line-height: 1.6;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 280px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--grey-border);
+            background: var(--grey-bg);
+            color: var(--black);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            padding: 0 14px 0 36px;
+            border-radius: 2px;
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--black);
+            background: var(--white);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--grey-mid);
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        /* DIRECTORY GRID */
+        .directory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            border: 1px solid var(--grey-border);
+            border-radius: 4px;
+            background: var(--white);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--black);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .card-badge {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .badge-active {
+            background: #e8f5e9;
+            color: var(--green);
+            border: 1px solid #c8e6c9;
+        }
+
+        .badge-system {
+            background: var(--grey-bg);
+            color: var(--grey-dark);
+            border: 1px solid var(--grey-border);
+        }
+
+        .badge-soon {
+            background: #fff8e1;
+            color: #b78103;
+            border: 1px solid #ffe082;
+        }
+
+        .card-icon {
+            font-size: 24px;
+        }
+
+        .card-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--grey-mid);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: auto;
+        }
+
+        .tag-pill {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            color: var(--grey-dark);
+            background: var(--grey-bg);
+            padding: 2px 6px;
+            border-radius: 2px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .card-footer {
+            border-top: 1px solid #f0f0f0;
+            padding: 16px 24px;
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-launch {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            height: 36px;
+            padding: 0 16px;
+            background: var(--black);
+            color: var(--white);
+            text-decoration: none;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            transition: background 0.15s ease;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-launch:hover {
+            background: var(--grey-dark);
+        }
+
+        .btn-launch.disabled {
+            background: var(--grey-border);
+            color: var(--grey-light);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .card-meta {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--grey-mid);
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--grey-border);
+            padding: 20px 32px;
+            background: var(--grey-bg);
+            text-align: center;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--grey-mid);
+            letter-spacing: 1px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                padding: 0 16px;
+            }
+
+            #directory-screen {
+                padding: 24px 16px;
+            }
+
+            .directory-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .directory-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
 <body>
-<H1>Hello World</h1>
+
+    <!-- Sticky Header -->
+    <header>
+        <div class="header-brand">
+            <a href="index.html" class="header-logo-link" title="Timex Group Portal Directory">
+                <img src="timex_logo.png" alt="Timex Group" class="timex-logo-img" />
+            </a>
+            <div class="header-divider"></div>
+            <span class="header-subtitle">Portal Directory</span>
+        </div>
+        <div class="header-right">
+            <span class="header-date" id="header-date"></span>
+            <div class="user-pill" id="user-pill">
+                <span class="user-name" id="user-name">User: admin</span>
+                <button class="btn-logout" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- AUTHENTICATION SCREEN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <span class="login-badge">Restricted Access</span>
+            <h1 class="login-heading">Timex Portal Log In</h1>
+            <p class="login-subheading">Enter your authorized credentials to access the production operational directory
+                and dashboards.</p>
+
+            <div class="login-error" id="login-error">
+                Authentication failed: Invalid username or password.
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="e.g. admin" required
+                        autocomplete="username" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required
+                        autocomplete="current-password" />
+                </div>
+                <button type="submit" class="btn-login">Sign In →</button>
+            </form>
+
+
+        </div>
+    </div>
+
+    <!-- DIRECTORY SCREEN -->
+    <div id="directory-screen">
+        <div class="directory-header">
+            <div class="directory-title-area">
+                <h1 class="directory-heading">Operations &amp; Dashboards Hub</h1>
+                <p class="directory-subheading">Access production tracking tools, shortage reports, and operational
+                    analytics for Timex Group manufacturing facilities.</p>
+            </div>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="search-input" placeholder="Search directory modules..."
+                    oninput="filterCards()" />
+            </div>
+        </div>
+
+        <div class="directory-grid" id="directory-grid">
+
+            <!-- Card 1: Shortage Dashboard -->
+            <div class="card"
+                data-title="production shortage dashboard work order tracker tin assembly strapping excel">
+                <div class="card-body">
+                    <div class="card-top">
+                        <span class="card-badge badge-active">● Active Module</span>
+                        <span class="card-icon">📊</span>
+                    </div>
+                    <h2 class="card-title">Production Shortage Dashboard</h2>
+                    <p class="card-desc">Process Work Order Tracker and TIN Shortage Excel reports to identify component
+                        bottlenecks across Assembly and Strapping lines.</p>
+                    <div class="card-tags">
+                        <span class="tag-pill">XLS / XLSX Parser</span>
+                        <span class="tag-pill">Assembly &amp; Strapping</span>
+                        <span class="tag-pill">KPI Metrics</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-meta">v1.0 • shortage.html</span>
+                    <a href="shortage.html" class="btn-launch">Launch Tool →</a>
+                </div>
+            </div>
+
+            <!-- Card 2: LCR Analytics Dashboard -->
+            <div class="card"
+                data-title="line complaint register lcr analytics quality supplier rejection rate defect excel pdf">
+                <div class="card-body">
+                    <div class="card-top">
+                        <span class="card-badge badge-active">● Active Module</span>
+                        <span class="card-icon">🔬</span>
+                    </div>
+                    <h2 class="card-title">Line Complaint Analytics (LCR)</h2>
+                    <p class="card-desc">Analyze manufacturing line complaint registers, supplier rejection rates, defect Pareto breakdowns, and monthly quality trends.</p>
+                    <div class="card-tags">
+                        <span class="tag-pill">LCR Register</span>
+                        <span class="tag-pill">Supplier Quality</span>
+                        <span class="tag-pill">PDF &amp; Chart Export</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-meta">v1.0 • lcr_dashboard.html</span>
+                    <a href="lcr_dashboard.html" class="btn-launch">Launch Tool →</a>
+                </div>
+            </div>
+
+            <!-- Card 2: Work Order Tracker Guide -->
+            <div class="card" data-title="work order tracker sap erp daily report guide documentation">
+                <div class="card-body">
+                    <div class="card-top">
+                        <span class="card-badge badge-system">Documentation</span>
+                        <span class="card-icon">📋</span>
+                    </div>
+                    <h2 class="card-title">Work Order Tracker Spec</h2>
+                    <p class="card-desc">Standard operating procedures for exporting daily Work Order Tracker reports
+                        from SAP/ERP systems with required header structures.</p>
+                    <div class="card-tags">
+                        <span class="tag-pill">SAP Export</span>
+                        <span class="tag-pill">SOP Standard</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-meta">Reference Document</span>
+                    <button class="btn-launch btn-launch-sec"
+                        onclick="alert('Work Order Tracker Specification: Please export standard XLS files with columns for Job Name, Assembly Code, and Quantities.')">View
+                        Spec</button>
+                </div>
+            </div>
+
+            <!-- Card 3: TIN Component Reference -->
+            <div class="card" data-title="tin component shortage reference sub-assembly inventory stock">
+                <div class="card-body">
+                    <div class="card-top">
+                        <span class="card-badge badge-system">Reference</span>
+                        <span class="card-icon">🔩</span>
+                    </div>
+                    <h2 class="card-title">TIN Shortage Matrix</h2>
+                    <p class="card-desc">Component allocation breakdown and safety stock reference guide for TIN work
+                        order shortages and component part mappings.</p>
+                    <div class="card-tags">
+                        <span class="tag-pill">Components</span>
+                        <span class="tag-pill">Part Mapping</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-meta">Reference Data</span>
+                    <button class="btn-launch btn-launch-sec"
+                        onclick="alert('TIN Matrix: Ensure TIN report contains exact component part numbers corresponding to WOT assembly numbers.')">View
+                        Matrix</button>
+                </div>
+            </div>
+
+            <!-- Card 4: Factory Line Throughput (Planned) -->
+            <div class="card" data-title="factory line throughput assembly schedule capacity upcoming analytics">
+                <div class="card-body">
+                    <div class="card-top">
+                        <span class="card-badge badge-soon">Planned</span>
+                        <span class="card-icon">🏭</span>
+                    </div>
+                    <h2 class="card-title">Line Throughput Analytics</h2>
+                    <p class="card-desc">Real-time assembly line performance monitoring, shift targets vs actuals, and
+                        automated downtime logging.</p>
+                    <div class="card-tags">
+                        <span class="tag-pill">Real-time Analytics</span>
+                        <span class="tag-pill">Shift Management</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-meta">Q3 Roadmap</span>
+                    <a href="#" class="btn-launch disabled">Coming Soon</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Sticky Footer -->
+    <footer>
+        Timex Group Operational Portal &bull; Restricted Internal Access &bull; &copy; 2026 Timex Group
+    </footer>
+
+    <script src="auth.js"></script>
+    <script>
+        // Set Current Date in Header
+        const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+        document.getElementById('header-date').innerText = new Date().toLocaleDateString('en-US', dateOptions).toUpperCase();
+
+        // Check authentication state on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const isAuthenticated = sessionStorage.getItem('timex_authenticated') === 'true';
+            if (isAuthenticated) {
+                showDirectory();
+            } else {
+                showLogin();
+            }
+        });
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value.trim();
+            const errorElement = document.getElementById('login-error');
+
+            try {
+                // Authenticate asynchronously against SHA-256 hashes defined in auth.js
+                const isValid = await authenticateUser(usernameInput, passwordInput);
+                if (isValid) {
+                    errorElement.classList.remove('visible');
+                    sessionStorage.setItem('timex_authenticated', 'true');
+                    sessionStorage.setItem('timex_user', usernameInput);
+                    showDirectory();
+                } else {
+                    errorElement.classList.add('visible');
+                }
+            } catch (err) {
+                console.error("Authentication error:", err);
+                errorElement.innerText = "Authentication service error. Please try again.";
+                errorElement.classList.add('visible');
+            }
+        }
+
+        function showDirectory() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('directory-screen').style.display = 'block';
+
+            const userPill = document.getElementById('user-pill');
+            const userName = document.getElementById('user-name');
+            const savedUser = sessionStorage.getItem('timex_user') || 'admin';
+
+            userName.innerText = 'USER: ' + savedUser.toUpperCase();
+            userPill.classList.add('visible');
+        }
+
+        function showLogin() {
+            document.getElementById('directory-screen').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('user-pill').classList.remove('visible');
+        }
+
+        function logout() {
+            sessionStorage.removeItem('timex_authenticated');
+            sessionStorage.removeItem('timex_user');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('login-error').classList.remove('visible');
+            showLogin();
+        }
+
+        function filterCards() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title') || '';
+                if (title.toLowerCase().includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </body>
+
 </html>
