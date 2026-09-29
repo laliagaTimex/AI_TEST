@@ -1,0 +1,14 @@
+name: my-static-site
+region: nyc
+features:
+  - buildpack-stack=ubuntu-22-04
+static_sites:
+  - name: frontend
+    github:
+      repo: laliagaTimex/AI_Test
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    output_dir: /
+    index_document: index.html
+    catchall_document: index.html
